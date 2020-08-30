@@ -40,4 +40,6 @@ app.post("/accessEditor", (req, response) => {
   }
 });
 
-app.listen(port, hostname);
+app.listen(port, hostname,()=>{
+  console.log(`listening into ${hostname} ${port}`)
+});
