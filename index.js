@@ -21,6 +21,7 @@ const uri = `mongodb+srv://tihomir22:${mongoPassword}@cluster0.xc7wt.mongodb.net
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.get("/", function (req, res) {
+console.log("hello hello");
   res.send("Hello World");
 });
 
