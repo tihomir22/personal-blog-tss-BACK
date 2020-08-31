@@ -25,15 +25,18 @@ app.get("/", function (req, res) {
 });
 
 app.get("/posts", function (req, res) {
+	console.log("GET POSTS");
   postController.index(req, res);
 });
 
 app.post("/posts", function (req, res) {
+console.log("POST POSTS");
   postController.new(req, res);
 });
 
 app.post("/accessEditor", (req, response) => {
-  if (req.body && req.body.contrasenya) {
+	console.log("ACCESS EDITOR"); 
+ if (req.body && req.body.contrasenya) {
     passController.recuperarContrasenya(req, response, req.body.contrasenya);
   } else {
     response.json({ status: "error", message: "Te falta algun dato por introducir", data: false });
