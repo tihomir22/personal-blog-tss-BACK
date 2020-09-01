@@ -11,6 +11,8 @@ require("morgan");
 
 const postController = require("./controlers/postController");
 const passController = require("./controlers/passController");
+const userController = require("./controlers/userController");
+
 const { read } = require("fs");
 const hostname = process.env.HOST;
 const port = process.env.PORT;
@@ -37,6 +39,10 @@ app.get("/postsSlug/:slug", function (req, res) {
 
 app.post("/posts", function (req, res) {
   postController.new(req, res);
+});
+
+app.post("/user", function (req, res) {
+  userController.new(req, res);
 });
 
 app.post("/accessEditor", (req, response) => {

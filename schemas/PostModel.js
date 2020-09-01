@@ -27,6 +27,10 @@ let postSchema = mongoose.Schema({
     default: Date.now,
   },
   autorId: Number,
+  autorObj: {
+    type: Object,
+    required: false,
+  },
   keywords: [String],
   comentarios: [{ id: Number, contenido: String }],
 });

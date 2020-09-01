@@ -1,19 +1,22 @@
 const PostModel = require("../schemas/PostModel");
-
+const userController = require("./userController");
 // Import post model
 exports.index = function (req, res) {
-  PostModel.get(function (err, posts) {
+  PostModel.get(async function (err, posts) {
     if (err) {
       res.json({
         status: "error",
         message: err,
       });
+    } else {
+      let postsConAutores = await fetchAutoresAndSetWithPosts(posts);
+
+      res.json({
+        status: "success",
+        message: "Posts retrieved successfully",
+        data: postsConAutores,
+      });
     }
-    res.json({
-      status: "success",
-      message: "Posts retrieved successfully",
-      data: posts,
-    });
   });
 };
 // Handle create post actions
@@ -51,18 +54,18 @@ exports.view = function (req, res) {
 };
 
 exports.viewBySlug = function (req, res) {
-  console.log(req.params);
-  PostModel.findOne({ slug: req.params.slug }, function (err, post) {
+  PostModel.findOne({ slug: req.params.slug }, async function (err, post) {
     if (err) {
       res.json({
         status: "error",
         message: err,
       });
     } else {
+      let postConAutores = await fetchAutoresAndSetWithPosts([post]);
       res.json({
         status: "success",
         message: "post found!",
-        data: post,
+        data: postConAutores[0],
       });
     }
   });
@@ -97,3 +100,23 @@ exports.delete = function (req, res) {
     }
   );
 };
+
+async function fetchAutoresAndSetWithPosts(posts) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let autores = [...new Set(posts.map((entry) => entry.autorId))].map((autorId) => {
+        return userController.findByIdPromise(autorId);
+      });
+      let autoresResueltos = await Promise.all(autores);
+      for (const post of posts) {
+        let autor = autoresResueltos.find((autor) => autor.id == post.autorId);
+        if (autor) {
+          post["autorObj"] = autor;
+        }
+      }
+      resolve(posts);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
