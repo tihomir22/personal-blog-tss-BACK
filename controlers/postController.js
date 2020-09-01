@@ -1,9 +1,8 @@
 const PostModel = require("../schemas/PostModel");
 
 // Import post model
-Post = require("../schemas/PostModel");
 exports.index = function (req, res) {
-  Post.get(function (err, posts) {
+  PostModel.get(function (err, posts) {
     if (err) {
       res.json({
         status: "error",
@@ -35,17 +34,42 @@ exports.new = function (req, res) {
 };
 // Handle view post info
 exports.view = function (req, res) {
-  Post.findById(req.params.post_id, function (err, post) {
-    if (err) res.send(err);
-    res.json({
-      message: "post found!",
-      data: post,
-    });
+  PostModel.findById(req.params.id, function (err, post) {
+    if (err) {
+      res.json({
+        status: "error",
+        message: err,
+      });
+    } else {
+      res.json({
+        status: "success",
+        message: "Post found successfully",
+        data: post,
+      });
+    }
+  });
+};
+
+exports.viewBySlug = function (req, res) {
+  console.log(req.params);
+  PostModel.findOne({ slug: req.params.slug }, function (err, post) {
+    if (err) {
+      res.json({
+        status: "error",
+        message: err,
+      });
+    } else {
+      res.json({
+        status: "success",
+        message: "post found!",
+        data: post,
+      });
+    }
   });
 };
 // Handle update post info
 exports.update = function (req, res) {
-  Post.findById(req.params.post_id, function (err, post) {
+  PostModel.findById(req.params.post_id, function (err, post) {
     if (err) res.send(err);
     post = req.body;
     // save the post and check for errors
@@ -60,7 +84,7 @@ exports.update = function (req, res) {
 };
 // Handle delete post
 exports.delete = function (req, res) {
-  post.deleteOne(
+  PostModel.deleteOne(
     {
       _id: req.params.post_id,
     },

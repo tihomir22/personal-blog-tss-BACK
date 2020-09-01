@@ -13,6 +13,10 @@ let postSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  slug: {
+    type: String,
+    required: true,
+  },
   bloques: {
     type: Object,
     required: true,
