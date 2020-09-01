@@ -24,10 +24,12 @@ const uri = `mongodb+srv://tihomir22:${mongoPassword}@cluster0.xc7wt.mongodb.net
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.get("/", function (req, res) {
+console.log("hello hello");
   res.send("Hello World");
 });
 
 app.get("/posts", function (req, res) {
+	console.log("GET POSTS");
   postController.index(req, res);
 });
 
@@ -36,11 +38,13 @@ app.get("/postsSlug/:slug", function (req, res) {
 });
 
 app.post("/posts", function (req, res) {
+console.log("POST POSTS");
   postController.new(req, res);
 });
 
 app.post("/accessEditor", (req, response) => {
-  if (req.body && req.body.contrasenya) {
+	console.log("ACCESS EDITOR"); 
+ if (req.body && req.body.contrasenya) {
     passController.recuperarContrasenya(req, response, req.body.contrasenya);
   } else {
     response.json({ status: "error", message: "Te falta algun dato por introducir", data: false });
