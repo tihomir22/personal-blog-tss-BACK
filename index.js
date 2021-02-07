@@ -5,7 +5,8 @@ const mongoose = require("mongoose"),
   cors = require("cors");
 
 require("dotenv").config();
-require("http");
+var http = require("http");
+var https = require("https");
 require("helmet");
 require("morgan");
 
@@ -13,10 +14,17 @@ const postController = require("./controlers/postController");
 const passController = require("./controlers/passController");
 const userController = require("./controlers/userController");
 
-const { read } = require("fs");
+const fs = require("file-system");
 const hostname = process.env.HOST;
-const port = process.env.PORT;
+const http_port = process.env.HTTP_PORT;
+const https_port = process.env.HTTPS_PORT;
 const mongoPassword = process.env.MONGO_PASS;
+
+var options = {
+  key: fs.readFileSync(require('path').resolve(__dirname, "./certs/privkey.pem")),
+  cert: fs.readFileSync(require('path').resolve(__dirname, "./certs/fullchain.pem")),
+}
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -53,6 +61,8 @@ app.post("/accessEditor", (req, response) => {
   }
 });
 
-app.listen(port, hostname, () => {
+/*app.listen(port, hostname, () => {
   console.log(`listening into ${hostname} ${port}`);
-});
+});*/
+http.createServer(app).listen(http_port);
+https.createServer(options, app).listen(https_port);
