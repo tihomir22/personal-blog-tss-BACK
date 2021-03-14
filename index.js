@@ -61,8 +61,6 @@ app.post("/accessEditor", (req, response) => {
   }
 });
 
-/*app.listen(port, hostname, () => {
-  console.log(`listening into ${hostname} ${port}`);
-});*/
+
 http.createServer(app).listen(http_port);
 https.createServer(options, app).listen(https_port);
